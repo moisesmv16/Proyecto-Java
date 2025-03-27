@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function addTodo(){
         if(title.value == '' || description.value == ''){
             alert.classList.remove('d-none');
-            alert.innerHTML = 'Title and description area required';
+            alert.innerHTML = 'Añada algo en el campo';
             return;
         }
         alert.classList.add('d-none');
