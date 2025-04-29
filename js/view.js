@@ -9,9 +9,8 @@ export default class View {
     this.addTodoForm = new AddTodo();
     this.modal = new Modal();
     this.filters = new Filters();
-    
 
-    this.addTodoForm.onClick((title, description) => this.addTodo(title, description));
+    this.addTodoForm.onClick((title, description, priority) => this.addTodo(title, description, priority));
     this.modal.onClick((id, values) => this.editTodo(id, values));
     this.filters.onClick((filters) => this.filter(filters));
   }
@@ -29,7 +28,7 @@ export default class View {
     const { type, words } = filters;
     const [, ...rows] = this.table.getElementsByTagName('tr');
     for (const row of rows) {
-      const [title, description, completed] = row.children;
+      const [title, description, priority, completed] = row.children;
       let shouldHide = false;
 
       if (words) {
@@ -51,8 +50,8 @@ export default class View {
     }
   }
 
-  addTodo(title, description) {
-    const todo = this.model.addTodo(title, description);
+  addTodo(title, description, priority) {
+    const todo = this.model.addTodo(title, description, priority);
     this.createRow(todo);
   }
 
@@ -65,7 +64,25 @@ export default class View {
     const row = document.getElementById(id);
     row.children[0].innerText = values.title;
     row.children[1].innerText = values.description;
-    row.children[2].children[0].checked = values.completed;
+
+    // Actualizar prioridad con badge
+    let priorityClass;
+    switch (values.priority) {
+      case 'Alta':
+        priorityClass = 'badge badge-danger';
+        break;
+      case 'Media':
+        priorityClass = 'badge badge-warning';
+        break;
+      case 'Baja':
+        priorityClass = 'badge badge-success';
+        break;
+      default:
+        priorityClass = 'badge badge-secondary';
+    }
+    row.children[2].innerHTML = `<span class="${priorityClass}">${values.priority}</span>`;
+
+    row.children[3].children[0].checked = values.completed;
   }
 
   removeTodo(id) {
@@ -74,24 +91,37 @@ export default class View {
   }
 
   createRow(todo) {
-    const row = table.insertRow();
+    const row = this.table.insertRow();
     row.setAttribute('id', todo.id);
+
+    let priorityClass;
+    switch (todo.priority) {
+      case 'Alta':
+        priorityClass = 'badge badge-danger';
+        break;
+      case 'Media':
+        priorityClass = 'badge badge-warning';
+        break;
+      case 'Baja':
+        priorityClass = 'badge badge-success';
+        break;
+      default:
+        priorityClass = 'badge badge-secondary';
+    }
+
     row.innerHTML = `
       <td>${todo.title}</td>
       <td>${todo.description}</td>
-      <td class="text-center">
-
-      </td>
-      <td class="text-right">
-
-      </td>
+      <td class="text-center"><span class="${priorityClass}">${todo.priority}</span></td>
+      <td class="text-center"></td>
+      <td class="text-right"></td>
     `;
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = todo.completed;
     checkbox.onclick = () => this.toggleCompleted(todo.id);
-    row.children[2].appendChild(checkbox);
+    row.children[3].appendChild(checkbox);
 
     const editBtn = document.createElement('button');
     editBtn.classList.add('btn', 'btn-primary', 'mb-1');
@@ -102,14 +132,15 @@ export default class View {
       id: todo.id,
       title: row.children[0].innerText,
       description: row.children[1].innerText,
-      completed: row.children[2].children[0].checked,
+      priority: todo.priority,
+      completed: row.children[3].children[0].checked,
     });
-    row.children[3].appendChild(editBtn);
+    row.children[4].appendChild(editBtn);
 
     const removeBtn = document.createElement('button');
     removeBtn.classList.add('btn', 'btn-danger', 'mb-1', 'ml-1');
     removeBtn.innerHTML = '<i class="fa fa-trash"></i>';
     removeBtn.onclick = () => this.removeTodo(todo.id);
-    row.children[3].appendChild(removeBtn);
+    row.children[4].appendChild(removeBtn);
   }
 }

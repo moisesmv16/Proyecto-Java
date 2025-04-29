@@ -9,8 +9,9 @@ export default class Model {
             title: 'Aprende JS',
             description: 'Wachate unos tutos',
             completed: false,
+            priority: 'Media',  // Agregamos la prioridad
           }
-        ]
+        ];
         this.currentId = 1;
       } else {
         this.currentId = this.todos[this.todos.length - 1].id + 1;
@@ -26,40 +27,44 @@ export default class Model {
     }
   
     getTodos() {
-      return this.todos.map((todo) => ({...todo}));
+      return this.todos.map((todo) => ({ ...todo }));
     }
+  
     findTodo(id) {
       return this.todos.findIndex((todo) => todo.id === id);
     }
+  
     toggleCompleted(id) {
       const index = this.findTodo(id);
       const todo = this.todos[index];
       todo.completed = !todo.completed;
       this.save();
     }
+  
     editTodo(id, values) {
       const index = this.findTodo(id);
       Object.assign(this.todos[index], values);
       this.save();
     }
-    addTodo(title, description) {
+  
+    addTodo(title, description, priority = 'Media') {  // Agregar prioridad en la creación
       const todo = {
         id: this.currentId++,
         title,
         description,
         completed: false,
-      }
+        priority,  // Prioridad añadida
+      };
   
       this.todos.push(todo);
-      console.log(this.todos);
       this.save();
   
-      return {...todo};
+      return { ...todo };
     }
   
     removeTodo(id) {
       const index = this.findTodo(id);
-      this.todos.splice(index, 1);  
+      this.todos.splice(index, 1);
       this.save();
     }
   }

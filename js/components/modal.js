@@ -6,8 +6,9 @@ export default class Modal {
     this.description = document.getElementById('modal-description');
     this.btn = document.getElementById('modal-btn');
     this.completed = document.getElementById('modal-completed');
-    this.alert = new Alert('modal-alert');
+    this.priority = document.getElementById('modal-priority'); // <-- Nuevo: priority
 
+    this.alert = new Alert('modal-alert');
     this.todo = null;
   }
 
@@ -16,6 +17,7 @@ export default class Modal {
     this.title.value = todo.title;
     this.description.value = todo.description;
     this.completed.checked = todo.completed;
+    this.priority.value = todo.priority; // <-- Asignamos prioridad en el select
   }
 
   onClick(callback) {
@@ -31,6 +33,7 @@ export default class Modal {
         title: this.title.value,
         description: this.description.value,
         completed: this.completed.checked,
+        priority: this.priority.value, // <-- Pasamos prioridad también
       });
     }
   }
