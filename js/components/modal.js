@@ -23,7 +23,7 @@ export default class Modal {
   onClick(callback) {
     this.btn.onclick = () => {
       if (!this.title.value || !this.description.value) {
-        this.alert.show('Title and description are required');
+        this.alert.show('Por favor añada informacion');
         return;
       }
 
