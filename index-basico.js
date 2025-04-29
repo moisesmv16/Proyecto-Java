@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function(){
-    const title = document.getElementById('title');
-    const description = document.getElementById('description');
-    const table = document.getElementById('table');
+    const title = document.getElementById('Titulo');
+    const description = document.getElementById('Descripcion');
+    const table = document.getElementById('Tabla');
     
     const alert = document.getElementById('alert');
     const btn = document.getElementById('add');
